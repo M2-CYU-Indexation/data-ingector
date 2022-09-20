@@ -1,4 +1,4 @@
-package fr.m2_cyu_indexation.indexer;
+package fr.m2_cyu_indexation.index.indexer;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -9,14 +9,10 @@ import java.nio.file.Path;
  *
  * @author Aldric Vitali Silvestre
  */
-public class Indexer {
-    private final Path inputPath;
-    private final Path outputFolderPath;
+public class ExternProgramIndexer implements Indexer {
     private final Path indexerPath;
 
-    public Indexer(Path inputPath, Path outputFolderPath, Path indexerPath) {
-        this.inputPath = inputPath;
-        this.outputFolderPath = outputFolderPath;
+    public ExternProgramIndexer(Path indexerPath) {
         this.indexerPath = indexerPath;
     }
 
@@ -24,9 +20,10 @@ public class Indexer {
      * From the given inputs and outputs, call the C program in order to index all images in the targeted folder.
      * @throws RuntimeException if an error happens during or at the end of the process.
      */
-    public void startIndexing() {
+    @Override
+    public void createIndexes(Path inputPath, Path outputFolderPath) {
         System.out.println("==== Start C program ====");
-        Process process = startProgram();
+        Process process = startProgram(inputPath, outputFolderPath);
         int returnCode = waitProgramEnd(process);
         if (returnCode != 0) {
             throw new RuntimeException("Program ended with error code " + returnCode);
@@ -42,7 +39,7 @@ public class Indexer {
         }
     }
 
-    private Process startProgram() {
+    private Process startProgram(Path inputPath, Path outputFolderPath) {
         try {
             return new ProcessBuilder()
                     .command(indexerPath.toString(), inputPath.toString(), outputFolderPath.toString())

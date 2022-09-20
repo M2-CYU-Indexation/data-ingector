@@ -16,6 +16,8 @@ public class Arguments {
     // Can only be a file
     private final Path outputFolderPath;
 
+    private final boolean doUploadImage;
+
     /**
      * Loads and checks the arguments.
      * @param args the arguments of the main function
@@ -27,6 +29,11 @@ public class Arguments {
         }
         inputPath = createExistingPath(args[0], false);
         outputFolderPath = createExistingPath(args[1], true);
+        doUploadImage = checkUploadImage(args);
+    }
+
+    private boolean checkUploadImage(String[] args) {
+        return args.length < 3 || !"--no-upload".equals(args[2]);
     }
 
     public Path getInputPath() {
@@ -35,6 +42,10 @@ public class Arguments {
 
     public Path getOutputFolderPath() {
         return outputFolderPath;
+    }
+
+    public boolean isDoUploadImage() {
+        return doUploadImage;
     }
 
     private Path createExistingPath(String strPath, boolean mustBeDir) {
