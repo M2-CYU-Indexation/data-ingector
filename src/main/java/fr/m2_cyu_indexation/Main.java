@@ -6,6 +6,8 @@ import fr.m2_cyu_indexation.index.indexer.ExternProgramIndexer;
 import fr.m2_cyu_indexation.index.indexer.Indexer;
 import fr.m2_cyu_indexation.index.parser.IndexParser;
 import fr.m2_cyu_indexation.injector.Injector;
+import fr.m2_cyu_indexation.saver.IndexSaver;
+import fr.m2_cyu_indexation.saver.NoOpIndexSaver;
 
 public class Main {
     public static void main(String[] args) {
@@ -14,7 +16,8 @@ public class Main {
 
         Indexer indexer = new ExternProgramIndexer(config.getIndexerPath());
         IndexParser indexParser = new IndexParser();
-        Injector injector = new Injector(indexer, indexParser, null);
+        IndexSaver saver = new NoOpIndexSaver();
+        Injector injector = new Injector(indexer, indexParser, saver);
 
         injector.inject(arguments.getInputPath(), arguments.getOutputFolderPath(), arguments.isDoUploadImage());
     }

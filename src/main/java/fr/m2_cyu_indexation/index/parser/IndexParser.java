@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 public class IndexParser {
 
     public IndexContent parse(Path inputFilePath) {
+        System.out.println("Parse " + inputFilePath);
         Map<String, String> map = createMapping(inputFilePath);
         return IndexContent.fromMap(map);
     }
@@ -24,7 +25,7 @@ public class IndexParser {
             return lines.filter(s -> !s.isBlank())
                     .filter(s -> s.contains(":"))
                     .map(s -> s.split(":"))
-                    .filter(spl -> spl.length != 2)
+                    .filter(spl -> spl.length == 2)
                     .collect(Collectors.toMap(
                             spl -> spl[0],
                             spl -> spl[1]

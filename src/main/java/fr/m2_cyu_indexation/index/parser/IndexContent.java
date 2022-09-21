@@ -2,6 +2,7 @@ package fr.m2_cyu_indexation.index.parser;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The contents of an index,
@@ -104,7 +105,7 @@ public class IndexContent {
 
         // We have a jpg file in the content folder
         String name = mapGet(map, "name");
-        String split[] = name.split(".");
+        String split[] = name.split("\\.");
         indexContent.setImageName(split[0] + ".jpg");
 
         indexContent.setNbOutlinePixels(parseLong(mapGet(map, "nbOutlinePixels")));
@@ -115,9 +116,10 @@ public class IndexContent {
     }
 
     private static String mapGet(Map<String, String> map, String key) {
-        if (!map.containsKey(key))
+        if (!map.containsKey(key)) {
             throw new IllegalArgumentException("Key not found in index : " + key);
-        return  map.get(key);
+        }
+        return map.get(key);
     }
 
     private static int parseInt(String numStr) {
@@ -305,4 +307,82 @@ public class IndexContent {
     public void setRGB(boolean RGB) {
         isRGB = RGB;
     }
+
+    @Override
+    public String toString() {
+        return "IndexContent{" +
+                "imageName='" + imageName + '\'' +
+                ", width=" + width +
+                ", height=" + height +
+                ", greyHistogram=" + Arrays.toString(greyHistogram) +
+                ", redHistogram=" + Arrays.toString(redHistogram) +
+                ", greenHistogram=" + Arrays.toString(greenHistogram) +
+                ", blueHistogram=" + Arrays.toString(blueHistogram) +
+                ", redRatio=" + redRatio +
+                ", greenRatio=" + greenRatio +
+                ", blueRatio=" + blueRatio +
+                ", averageColor=" + averageColor +
+                ", gradientNormMean=" + gradientNormMean +
+                ", outlinesMinX=" + outlinesMinX +
+                ", outlinesMaxX=" + outlinesMaxX +
+                ", outlinesMinY=" + outlinesMinY +
+                ", outlinesMaxY=" + outlinesMaxY +
+                ", outlinesBarycenterX=" + outlinesBarycenterX +
+                ", outlinesBarycenterY=" + outlinesBarycenterY +
+                ", nbOutlinePixels=" + nbOutlinePixels +
+                ", isRGB=" + isRGB +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        IndexContent that = (IndexContent) o;
+        return width == that.width && height == that.height && Double.compare(that.redRatio,
+                                                                              redRatio
+        ) == 0 && Double.compare(that.greenRatio, greenRatio) == 0 && Double.compare(that.blueRatio,
+                                                                                     blueRatio
+        ) == 0 && averageColor == that.averageColor && Double.compare(that.gradientNormMean,
+                                                                      gradientNormMean
+        ) == 0 && outlinesMinX == that.outlinesMinX && outlinesMaxX == that.outlinesMaxX && outlinesMinY == that.outlinesMinY && outlinesMaxY == that.outlinesMaxY && outlinesBarycenterX == that.outlinesBarycenterX && outlinesBarycenterY == that.outlinesBarycenterY && nbOutlinePixels == that.nbOutlinePixels && isRGB == that.isRGB && Objects.equals(
+                imageName,
+                that.imageName
+        ) && Arrays.equals(greyHistogram, that.greyHistogram) && Arrays.equals(redHistogram,
+                                                                               that.redHistogram
+        ) && Arrays.equals(greenHistogram, that.greenHistogram) && Arrays.equals(blueHistogram,
+                                                                                 that.blueHistogram
+        );
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(imageName,
+                                  width,
+                                  height,
+                                  redRatio,
+                                  greenRatio,
+                                  blueRatio,
+                                  averageColor,
+                                  gradientNormMean,
+                                  outlinesMinX,
+                                  outlinesMaxX,
+                                  outlinesMinY,
+                                  outlinesMaxY,
+                                  outlinesBarycenterX,
+                                  outlinesBarycenterY,
+                                  nbOutlinePixels,
+                                  isRGB
+        );
+        result = 31 * result + Arrays.hashCode(greyHistogram);
+        result = 31 * result + Arrays.hashCode(redHistogram);
+        result = 31 * result + Arrays.hashCode(greenHistogram);
+        result = 31 * result + Arrays.hashCode(blueHistogram);
+        return result;
+    }
+
 }

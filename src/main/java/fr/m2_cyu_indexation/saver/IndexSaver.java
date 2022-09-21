@@ -1,5 +1,7 @@
 package fr.m2_cyu_indexation.saver;
 
+import fr.m2_cyu_indexation.index.parser.IndexContent;
+
 import java.nio.file.Path;
 
 /**
@@ -9,6 +11,6 @@ import java.nio.file.Path;
  */
 public interface IndexSaver {
 
-    void save(Path inputFolderPath);
+    void save(IndexContent indexContent, boolean doUploadImage);
 
 }

@@ -28,7 +28,7 @@ public class Arguments {
             throw new IllegalArgumentException("No enough arguments : need input path and output path");
         }
         inputPath = createExistingPath(args[0], false);
-        outputFolderPath = createExistingPath(args[1], true);
+        outputFolderPath = Path.of(args[1]);
         doUploadImage = checkUploadImage(args);
     }
 
@@ -53,9 +53,6 @@ public class Arguments {
         File file = path.toFile();
         if (!file.exists()) {
             throw new IllegalArgumentException("Path provided is not a file : " + path);
-        }
-        if (mustBeDir && !file.isDirectory()){
-            throw new IllegalArgumentException("Path provided must be a directory : " + path);
         }
         return path;
     }
