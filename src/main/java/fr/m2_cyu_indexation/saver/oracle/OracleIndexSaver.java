@@ -31,10 +31,7 @@ public class OracleIndexSaver implements IndexSaver {
         try (
                 PreparedStatement statement = setVariables(oracleConnection.createPreparedStatement(query), indexContent);
         ) {
-            boolean success = statement.execute();
-            if (!success) {
-                throw new RuntimeException("The query returned an error.");
-            }
+           statement.execute();
         } catch (SQLException exception) {
             throw new RuntimeException("Error while handling statement", exception);
         }
@@ -44,7 +41,7 @@ public class OracleIndexSaver implements IndexSaver {
         String questionMarks = IntStream.range(0, 20)
                 .mapToObj(i -> "?")
                 .collect(Collectors.joining(","));
-        return "InsertImageMetaDatas(" + questionMarks + ");";
+        return "CALL InsertImageMetaDatas(" + questionMarks + ")";
     }
 
     private PreparedStatement setVariables(PreparedStatement statement, IndexContent content) throws SQLException {
