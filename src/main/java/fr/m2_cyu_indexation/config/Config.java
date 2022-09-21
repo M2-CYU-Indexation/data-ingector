@@ -16,13 +16,20 @@ public class Config {
     public static final String PROPERTIES_FILENAME = "application.properties";
     private final Path indexerPath;
 
+    private final OracleConfig oracleConfig;
+
     public Config() {
         Configuration configuration = loadConfiguration();
         indexerPath = loadIndexerPath(configuration);
+        oracleConfig = loadOracleConfig(configuration);
     }
 
     public Path getIndexerPath() {
         return indexerPath;
+    }
+
+    public OracleConfig getOracleConfig() {
+        return oracleConfig;
     }
 
     private Path loadIndexerPath(Configuration configuration) {
@@ -42,5 +49,16 @@ public class Config {
             throw new IllegalArgumentException("Error when loading configuration : " + cex.getMessage());
         }
         return configuration;
+    }
+
+    private OracleConfig loadOracleConfig(Configuration configuration) {
+        Configuration p = configuration.subset("oracledb");
+        return new OracleConfig(
+                p.getString("username"),
+                p.getString("password"),
+                p.getString("ip"),
+                p.getInt("port"),
+                p.getString("sid")
+        );
     }
 }
