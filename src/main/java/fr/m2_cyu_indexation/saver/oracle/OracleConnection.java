@@ -1,11 +1,9 @@
 package fr.m2_cyu_indexation.saver.oracle;
 
 import fr.m2_cyu_indexation.config.OracleConfig;
+import oracle.jdbc.OracleDriver;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  * The JDBC connection to the oracle database
@@ -14,11 +12,11 @@ import java.sql.Statement;
  */
 public class OracleConnection implements AutoCloseable {
 
-    Connection connection;
+    oracle.jdbc.OracleConnection connection;
 
     public OracleConnection(String username, String password, String ip, int port, String sid) throws SQLException {
         System.out.println("Create connection to oracledb");
-        connection = DriverManager.getConnection(
+        connection = (oracle.jdbc.OracleConnection) DriverManager.getConnection(
             createUrl(ip, port, sid),
             username,
             password
@@ -31,6 +29,10 @@ public class OracleConnection implements AutoCloseable {
 
     public Statement createStatement() throws SQLException {
         return connection.createStatement();
+    }
+
+    public PreparedStatement createPreparedStatement(String query) throws SQLException {
+        return connection.prepareStatement(query);
     }
 
     private String createUrl(String ip, int port, String sid) {
@@ -51,5 +53,10 @@ public class OracleConnection implements AutoCloseable {
     public void close() throws Exception {
         System.out.println("Close oracledb connection");
         connection.close();
+    }
+
+    public Array createVarray(Object[] a) throws SQLException {
+        // Oracle is a little special with that
+        return connection.createOracleArray("HISTOGRAM", a);
     }
 }
